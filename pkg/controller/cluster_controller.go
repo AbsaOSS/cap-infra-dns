@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"fmt"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -54,34 +55,46 @@ func (r *ClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (re
 	return res, err
 }
 
-func (r *ClusterReconciler) createOrUpdateEndpoint(ctx context.Context, ep *endpoint.DNSEndpoint) error {
+func (r *ClusterReconciler) createOrUpdateEndpoint(ctx context.Context, newEp *endpoint.DNSEndpoint) error {
 	oldEp := &endpoint.DNSEndpoint{}
 	epName := types.NamespacedName{
-		Namespace: ep.Namespace,
-		Name:      ep.Name,
+		Namespace: newEp.Namespace,
+		Name:      newEp.Name,
 	}
 	err := r.Client.Get(ctx, epName, oldEp)
 	fmt.Println("err:", err)
 	if apierrors.IsNotFound(err) {
 		fmt.Printf("%+v DNSEndpoint not found\n", epName)
-		err = r.Client.Create(ctx, ep, &client.CreateOptions{})
+		err = r.Client.Create(ctx, newEp)
 		if err != nil {
 			return err
 		}
+		return nil
 	}
-	//TODO compare oldEp and ep
+
+	if !EqualDNSEndpoints(newEp, oldEp) {
+		oldEp.Spec = newEp.Spec
+		oldEp.Annotations = newEp.Annotations
+		oldEp.Labels = newEp.Labels
+		err = r.Client.Update(ctx, oldEp)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+	}
+	//TODO compare oldEp and newEp
 	return nil
 }
 func (r *ClusterReconciler) GenerateDNSEndpoint(ctx context.Context, req ctrl.Request) (*endpoint.DNSEndpoint, error) {
 	ep := &endpoint.DNSEndpoint{}
+	cluster := &clusterv1.Cluster{}
+	err := r.Client.Get(ctx, req.NamespacedName, cluster, &client.GetOptions{})
 	ep.ObjectMeta = metav1.ObjectMeta{
 		Name:        req.Name,
 		Namespace:   req.Namespace,
-		Labels:      map[string]string{},
-		Annotations: map[string]string{},
+		Labels:      cluster.Labels,
+		Annotations: CopyWithoutLastAppliedConfiguration(cluster.Annotations),
 	}
-	cluster := &clusterv1.Cluster{}
-	err := r.Client.Get(ctx, req.NamespacedName, cluster, &client.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -103,8 +116,8 @@ func (r *ClusterReconciler) GenerateDNSEndpoint(ctx context.Context, req ctrl.Re
 	ep.Spec = endpoint.DNSEndpointSpec{
 		Endpoints: endpoints,
 	}
-
-	return ep, nil
+	err = controllerutil.SetOwnerReference(cluster, ep, r.Scheme)
+	return ep, err
 }
 func (r *ClusterReconciler) ClusterToEndpointMapFunc(ctx context.Context, o client.Object) []ctrl.Request {
 	result := []ctrl.Request{}
