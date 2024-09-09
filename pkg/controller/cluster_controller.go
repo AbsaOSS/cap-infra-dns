@@ -61,6 +61,7 @@ func (r *ClusterReconciler) createOrUpdateEndpoint(ctx context.Context, ep *endp
 		Name:      ep.Name,
 	}
 	err := r.Client.Get(ctx, epName, oldEp)
+	fmt.Println("err:", err)
 	if apierrors.IsNotFound(err) {
 		fmt.Printf("%+v DNSEndpoint not found\n", epName)
 		err = r.Client.Create(ctx, ep, &client.CreateOptions{})

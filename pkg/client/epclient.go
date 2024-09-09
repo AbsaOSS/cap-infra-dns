@@ -4,6 +4,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	externaldns "sigs.k8s.io/external-dns/endpoint"
 )
 
 var (
@@ -12,11 +13,10 @@ var (
 
 	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
 	AddToScheme   = schemeBuilder.AddToScheme
-	objectTypes   = []runtime.Object{}
 )
 
 func addKnownTypes(scheme *runtime.Scheme) error {
-	scheme.AddKnownTypes(GroupVersion, objectTypes...)
+	scheme.AddKnownTypes(GroupVersion, &externaldns.DNSEndpoint{}, &externaldns.DNSEndpointList{})
 	metav1.AddToGroupVersion(scheme, GroupVersion)
 	return nil
 }

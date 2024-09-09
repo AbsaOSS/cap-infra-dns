@@ -1,9 +1,9 @@
 package main
 
 import (
+	epclient "github.com/absaoss/cap-infra-dns/pkg/client"
 	"os"
 
-	epclient "github.com/absaoss/cap-infra-dns/pkg/client"
 	"github.com/absaoss/cap-infra-dns/pkg/controller"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -15,14 +15,13 @@ import (
 )
 
 var (
-	scheme   = runtime.NewScheme()
-	setupLog = ctrl.Log.WithName("setup")
+	runtimeScheme = runtime.NewScheme()
+	setupLog      = ctrl.Log.WithName("setup")
 )
 
 func init() {
-	//utilruntime.Must(clientgoscheme.AddToScheme(scheme))
-	utilruntime.Must(clusterv1.AddToScheme(scheme))
-	utilruntime.Must(epclient.AddToScheme(scheme))
+	utilruntime.Must(clusterv1.AddToScheme(runtimeScheme))
+	utilruntime.Must(epclient.AddToScheme(runtimeScheme))
 }
 
 func main() {
@@ -30,7 +29,7 @@ func main() {
 
 	ctx := ctrl.SetupSignalHandler()
 	opts := ctrl.Options{
-		Scheme: scheme,
+		Scheme: runtimeScheme,
 	}
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), opts)
 	if err != nil {
