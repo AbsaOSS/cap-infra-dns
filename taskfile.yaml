@@ -1,0 +1,22 @@
+# https://taskfile.dev/usage/
+---
+version: '3'
+
+env:
+  TFENV_TERRAFORM_VERSION: 1.5.7
+
+dotenv: ['.env']
+
+tasks:
+  lint:
+    cmds:
+      - gitleaks detect . --no-git --verbose --config=.gitleaks.toml
+      - yamllint .
+      - goimports -w ./
+      - golangci-lint run
+
+  lint-init:
+    cmds:
+      - brew install gitleaks
+      - brew install yamllint
+      - brew install golangci-lint
