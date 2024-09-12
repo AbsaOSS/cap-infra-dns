@@ -34,7 +34,7 @@ ARG ARCH
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
 FROM gcr.io/distroless/static:nonroot-${ARCH}
 WORKDIR /
-COPY manager managr
+COPY manager manager
 USER 65532
 
 ENTRYPOINT ["/manager"]
