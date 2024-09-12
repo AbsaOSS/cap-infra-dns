@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/AbsaOSS/cap-infra-dns/compare/v0.1.5...v0.1.6) (2024-09-12)
+
+
+### Bug Fixes
+
+* Correct executable name ([3ac9e65](https://github.com/AbsaOSS/cap-infra-dns/commit/3ac9e653790784afcbaf8bdd8c2e24cebefc9d37))
+
 ## [0.1.5](https://github.com/AbsaOSS/cap-infra-dns/compare/v0.1.4...v0.1.5) (2024-09-12)
 
 
