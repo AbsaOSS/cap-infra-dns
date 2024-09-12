@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/AbsaOSS/cap-infra-dns/compare/v0.1.3...v0.1.4) (2024-09-12)
+
+
+### Bug Fixes
+
+* change golang version to v1.23 ([75248f7](https://github.com/AbsaOSS/cap-infra-dns/commit/75248f7b80135c652c6e234976ed748c98c0b0dd))
+
 ## [0.1.3](https://github.com/AbsaOSS/cap-infra-dns/compare/v0.1.2...v0.1.3) (2024-09-12)
 
 
