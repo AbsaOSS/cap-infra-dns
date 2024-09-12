@@ -82,7 +82,7 @@ dockers:
       - --build-arg=CI_COMMIT_TIMESTAMP="{{ .Env.CI_COMMIT_TIMESTAMP }}"
       - --build-arg=CI_COMMIT_SHA="{{ .Env.CI_COMMIT_SHA }}"
       - --build-arg=CI_COMMIT_TAG="{{ .Env.CI_COMMIT_TAG }}"
-      - --build-arg=ARCH="amd64"
+      - --build-arg=ARCH=amd64
   - use: buildx
     goos: linux
     goarch: arm64
@@ -96,7 +96,7 @@ dockers:
       - --build-arg=CI_COMMIT_TIMESTAMP="{{ .Env.CI_COMMIT_TIMESTAMP }}"
       - --build-arg=CI_COMMIT_SHA="{{ .Env.CI_COMMIT_SHA }}"
       - --build-arg=CI_COMMIT_TAG="{{ .Env.CI_COMMIT_TAG }}"
-      - --build-arg=ARCH="arm64"
+      - --build-arg=ARCH=arm64
 docker_manifests:
   - name_template: ghcr.io/absaoss/cap-infra-dns:latest
     image_templates:
