@@ -48,7 +48,7 @@ builds:
     ldflags:
       - -X 'main.Version={{ .Tag }}'
       - -X 'main.Gitsha={{ .ShortCommit }}'
-    main: ./manager
+    main: ./main.go
 source:
   enabled: true
 signs:
