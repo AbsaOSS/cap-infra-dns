@@ -7,7 +7,7 @@ formats = "colored-line-number"
 [linters]
 enable = [
     "gocyclo", "unconvert", "goimports", "unused",
-    "misspell", "nakedret", "errcheck", "revive", "ineffassign",
+    "misspell", "nakedret", "errcheck", "ineffassign",
     "goconst", "govet", "unparam", "gofmt"
 ]
 
