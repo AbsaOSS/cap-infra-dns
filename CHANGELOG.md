@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/AbsaOSS/cap-infra-dns/compare/v0.1.4...v0.1.5) (2024-09-12)
+
+
+### Bug Fixes
+
+* simplify dockerfile ([8b17413](https://github.com/AbsaOSS/cap-infra-dns/commit/8b17413ba6c010f737a00fc697af13b598cb1cd4))
+
 ## [0.1.4](https://github.com/AbsaOSS/cap-infra-dns/compare/v0.1.3...v0.1.4) (2024-09-12)
 
 
