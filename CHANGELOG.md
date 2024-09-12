@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/AbsaOSS/cap-infra-dns/compare/v0.1.1...v0.1.2) (2024-09-12)
+
+
+### Bug Fixes
+
+* goreleaser ([c8b701b](https://github.com/AbsaOSS/cap-infra-dns/commit/c8b701b960d150c0e6a5ae979561f4d1e001d154))
+
 ## [0.1.1](https://github.com/AbsaOSS/cap-infra-dns/compare/v0.1.0...v0.1.1) (2024-09-12)
 
 
