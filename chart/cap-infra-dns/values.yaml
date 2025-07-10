@@ -21,7 +21,7 @@ image:
   repository: ghcr.io/absaoss/cap-infra-dns
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v0.0.1"
+  tag: "v0.1.6"
 
 serviceAccount:
   # Specifies whether a service account should be created
