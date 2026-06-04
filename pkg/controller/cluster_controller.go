@@ -23,15 +23,14 @@ import (
 	"fmt"
 
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	"sigs.k8s.io/external-dns/endpoint"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"sigs.k8s.io/external-dns/endpoint"
-
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	clusterv1 "sigs.k8s.io/cluster-api/api/v1beta1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	clusterv1 "sigs.k8s.io/cluster-api/api/core/v1beta2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
@@ -80,9 +79,9 @@ func (r *ClusterReconciler) createOrUpdateEndpoint(ctx context.Context, newEp *e
 		Namespace: newEp.Namespace,
 		Name:      newEp.Name,
 	}
-	err := r.Client.Get(ctx, epName, oldEp)
+	err := r.Get(ctx, epName, oldEp)
 	if apierrors.IsNotFound(err) {
-		err = r.Client.Create(ctx, newEp)
+		err = r.Create(ctx, newEp)
 		if err != nil {
 			return err
 		}
@@ -93,7 +92,7 @@ func (r *ClusterReconciler) createOrUpdateEndpoint(ctx context.Context, newEp *e
 		oldEp.Spec = newEp.Spec
 		oldEp.Annotations = newEp.Annotations
 		oldEp.Labels = newEp.Labels
-		err = r.Client.Update(ctx, oldEp)
+		err = r.Update(ctx, oldEp)
 		if err != nil {
 			fmt.Println(err)
 			return err
@@ -105,7 +104,7 @@ func (r *ClusterReconciler) createOrUpdateEndpoint(ctx context.Context, newEp *e
 func (r *ClusterReconciler) GenerateDNSEndpoint(ctx context.Context, req ctrl.Request) (*endpoint.DNSEndpoint, error) {
 	ep := &endpoint.DNSEndpoint{}
 	cluster := &clusterv1.Cluster{}
-	err := r.Client.Get(ctx, req.NamespacedName, cluster, &client.GetOptions{})
+	err := r.Get(ctx, req.NamespacedName, cluster, &client.GetOptions{})
 	ep.ObjectMeta = metav1.ObjectMeta{
 		Name:        req.Name,
 		Namespace:   req.Namespace,
@@ -155,7 +154,7 @@ func (r *ClusterReconciler) ClusterToEndpointMapFunc(ctx context.Context, o clie
 	})
 
 	machineList := &clusterv1.MachineList{}
-	if err := r.Client.List(ctx, machineList, selectors...); err != nil {
+	if err := r.List(ctx, machineList, selectors...); err != nil {
 		return nil
 	}
 	ips := extractStatus(machineList)
@@ -216,7 +215,7 @@ func (r ClusterReconciler) MachineToEndpointMapFunc(_ context.Context, o client.
 	}
 
 	oldEp := &endpoint.DNSEndpoint{}
-	err := r.Client.Get(ctx, epMeta, oldEp)
+	err := r.Get(ctx, epMeta, oldEp)
 	if err != nil {
 		fmt.Printf("Error %s\n", err.Error())
 	}
@@ -231,14 +230,14 @@ func (r ClusterReconciler) MachineToEndpointMapFunc(_ context.Context, o client.
 	if ip == "" {
 		return result
 	}
-	delete := false
-	if m.ObjectMeta.DeletionTimestamp != nil {
-		delete = true
+	var doDelete = false
+	if m.DeletionTimestamp != nil {
+		doDelete = true
 	}
 
 	oldTargets := oldEp.Spec.Endpoints[0].Targets
-	oldEp.Spec.Endpoints[0].Targets = updateTargets(oldTargets, ip, delete)
-	err = r.Client.Update(ctx, oldEp)
+	oldEp.Spec.Endpoints[0].Targets = updateTargets(oldTargets, ip, doDelete)
+	err = r.Update(ctx, oldEp)
 	if err != nil {
 		fmt.Printf("Failed to update Endpoint: %s\n", err.Error())
 	}
