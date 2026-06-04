@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.2.0](https://github.com/AbsaOSS/cap-infra-dns/compare/v0.1.6...v0.2.0) (2026-06-04)
+
+
+### Features
+
+* Switch to cluster-api v1beta2 ([f17ce23](https://github.com/AbsaOSS/cap-infra-dns/commit/f17ce2308231d5f3db5d90e24bfec2ee155a602c))
+
+
+### Bug Fixes
+
+* helmchart ([5ed14b0](https://github.com/AbsaOSS/cap-infra-dns/commit/5ed14b03b9dfebf0baf3844f5f22d19b563b5b5f))
+* license headers ([0dc099c](https://github.com/AbsaOSS/cap-infra-dns/commit/0dc099c056e71a748925b3c7cbed1b293ca98c86))
+
+
+### Miscellaneous Chores
+
+* **ci:** Update golangci-lint action ([47a9fde](https://github.com/AbsaOSS/cap-infra-dns/commit/47a9fde45de7a814fedc6c740ee7bf8cc5bb71f0))
+
 ## [0.1.6](https://github.com/AbsaOSS/cap-infra-dns/compare/v0.1.5...v0.1.6) (2024-09-12)
 
 
